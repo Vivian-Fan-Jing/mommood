@@ -21,8 +21,26 @@ jobs:
       with:
         go-version: '1.24'
 
+    - name: Test
+      run: |
+            go test -coverprofile=coverage.out -covermode count $(go list ./... | grep -v tests )
+            go tool cover -func coverage.out
+
+    - name: Test Coverage
+      env:
+          TESTCOVERAGE_THRESHOLD: 80
+      run: |
+            echo "checking test coverage ..."
+            echo "Threshold             : $TESTCOVERAGE_THRESHOLD %"
+            totalCoverage=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
+            echo "Current test coverage : $totalCoverage %"
+            if (( $(echo "$totalCoverage $TESTCOVERAGE_THRESHOLD" | awk '{print ($1 > $2)}') )); then
+                echo "OK"
+            else
+                echo "Current test coverage is below threshold."
+                echo "Failed"
+                exit 1
+            fi
+
     - name: Build
       run: go build -v -o mommood .
-
-    - name: Test
-      run: go test -v ./...
