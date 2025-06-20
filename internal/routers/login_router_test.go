@@ -7,15 +7,12 @@ import (
 	"github.com/Vivian-Fan-Jing/mommood/tests"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/tools/router"
+	"github.com/pocketbase/pocketbase/tools/template"
 )
 
 func TestLoginRouter(t *testing.T) {
 	userName := "user1"
-	loginRouter := func(e *core.RequestEvent) error {
-		name := e.Request.PathValue("name")
-		return e.HTML(http.StatusOK, "welcome "+name)
-	}
-
+	registry := template.NewRegistry()
 	scenario := tests.ApiScenario{
 		Name:           "test login router",
 		Method:         http.MethodGet,
@@ -25,7 +22,7 @@ func TestLoginRouter(t *testing.T) {
 			userName,
 		},
 		RouterFunc: func(r *router.Router[*core.RequestEvent]) {
-			r.GET("/login/{name}", loginRouter)
+			r.GET("/login/{name}", LoginRouter(registry))
 		},
 	}
 

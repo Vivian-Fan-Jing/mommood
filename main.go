@@ -10,17 +10,19 @@ import (
 )
 
 func main() {
-	app := pocketbase.New()
-
-	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
-		registry := template.NewRegistry()
-
-		se.Router.GET("/login/{name}", routers.LoginRouter(registry))
-
-		return se.Next()
-	})
-
-	if err := app.Start(); err != nil {
+	if err := newApp(bindFn); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func newApp(bindFn func(se *core.ServeEvent) error) error {
+	app := pocketbase.New()
+	app.OnServe().BindFunc(bindFn)
+	return app.Start()
+}
+
+func bindFn(se *core.ServeEvent) error {
+	registry := template.NewRegistry()
+	se.Router.GET("/login/{name}", routers.LoginRouter(registry))
+	return se.Next()
 }

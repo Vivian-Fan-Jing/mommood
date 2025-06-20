@@ -2,6 +2,9 @@ package routers
 
 import (
 	"net/http"
+	"path"
+	"path/filepath"
+	"runtime"
 
 	"github.com/pocketbase/pocketbase/tools/template"
 
@@ -12,9 +15,10 @@ func LoginRouter(registry *template.Registry) func(*core.RequestEvent) error {
 	return func(e *core.RequestEvent) error {
 		name := e.Request.PathValue("name")
 
+		_, currentFile, _, _ := runtime.Caller(0)
 		html, err := registry.LoadFiles(
-			"views/layout.html",
-			"views/login.html",
+			filepath.Join(path.Dir(currentFile), "/../../views/layout.html"),
+			filepath.Join(path.Dir(currentFile), "/../../views/login.html"),
 		).Render(map[string]any{
 			"name": name,
 		})
