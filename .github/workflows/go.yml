@@ -44,3 +44,9 @@ jobs:
 
     - name: Build
       run: go build -v -o mommood .
+    - name: Build Docker image
+      uses: docker/build-push-action@v6
+      with:
+          context: .
+          push: false
+          tags: mommood/mommood:latest
