@@ -8,4 +8,4 @@ RUN apk add --no-cache --update --upgrade ca-certificates
 RUN adduser -D mommood
 USER mommood
 COPY --from=builder --chown=mommood:mommood /go/src/github.com/Vivian-Fan-Jing/mommood/mommood /mommood
-ENTRYPOINT ["/mommood"]
+ENTRYPOINT ["/mommood", "serve"]
