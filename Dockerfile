@@ -8,4 +8,10 @@ RUN apk add --no-cache --update --upgrade ca-certificates
 RUN adduser -D mommood
 USER mommood
 COPY --from=builder --chown=mommood:mommood /go/src/github.com/Vivian-Fan-Jing/mommood/mommood /mommood
-ENTRYPOINT ["/mommood", "serve"]
+RUN chmod +x /mommood
+RUN mkdir -p /pb_data
+ADD ./pb_data /pb_data
+RUN ls -lrt /pb_data
+VOLUME /pb_data
+EXPOSE 8090
+ENTRYPOINT ["/mommood", "serve", "--http=0.0.0.0:8090"]
