@@ -12,9 +12,9 @@ on:
 env:
   AWS_REGION: ap-southeast-1                   
   ECR_REPOSITORY: mommood        
-  ECS_SERVICE: mommood               
+  ECS_SERVICE: mommood2-service-ddmmvqgl               
   ECS_CLUSTER: mommood              
-  ECS_TASK_DEFINITION: .aws/td.json
+  ECS_TASK_DEFINITION: td.json
   IMAGE_TAG: latest
   CONTAINER_NAME: mommood
 
@@ -67,7 +67,7 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-    - name: Build Docker image
+    - name: Build Docker image and Push
       id: build-image
       env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -76,3 +76,10 @@ jobs:
           docker build --file ./Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+    - name: Deploy Amazon ECS task
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

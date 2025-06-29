@@ -15,3 +15,10 @@ go build -v -o mommood .
 ```
 go test -v ./...
 ```
+
+### API endpoints
+```
+http://mommood-237018365.ap-southeast-1.elb.amazonaws.com/login/user
+
+http://mommood-237018365.ap-southeast-1.elb.amazonaws.com/api/health
+```
