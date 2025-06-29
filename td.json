@@ -88,8 +88,5 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2025-06-29T04:38:45.271Z",
-    "registeredBy": "arn:aws:iam::267793441883:root",
-    "enableFaultInjection": false,
     "tags": []
 }
